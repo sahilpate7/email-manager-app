@@ -56,21 +56,6 @@ const Customers = () => {
             toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
         />
     );
-    
-    // const { error, isLoading, list } = useCustomers({
-    //     page:"1",
-    //     limit: "10"
-    //    
-    // });
-    // const customerList = ()=>{
-    //     return(
-    //         <ul>
-    //         {list.map((user) => (
-    //             <li key={user.email}>{user.email}</li>
-    //         )) || <li>No customers available</li>}
-    //         </ul>
-    //     )
-    // }
 
     if (isLoading) return <Loading />;
     if (error) return <ErrorMessage error={error} />;

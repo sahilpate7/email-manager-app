@@ -16,8 +16,8 @@ npm -v
 2. Clone and/or fork the repo and install npm packages:
 
 ```shell
-git clone git@github.com:bigcommerce/sample-app-nodejs.git my-bigcommerce-app
-cd my-bigcommerce-app
+git clone git@bitbucket.org:abovethefray/custom-email-manager.git
+cd custom-email-manager
 npm install
 ```
 
