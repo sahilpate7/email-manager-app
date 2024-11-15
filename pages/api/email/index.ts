@@ -5,12 +5,11 @@ export default async function handler(req:any, res:any) {
     if (req.method === 'POST') {
         const { email,subject, message } = req.body;
 
-        // Here, you would add the logic to send the email, for example:
-        // - Using an email-sending service like SendGrid, Nodemailer, or Mailgun.
+        // Nodemailer function.
 
         try {
             await transporter.sendMail({
-              from: 'connect@sahilpate.dev',
+              from: process.env.MAIL_FROM,
               to: email,
               subject: subject,
               text: message,

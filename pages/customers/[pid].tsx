@@ -6,7 +6,6 @@ import ErrorMessage from "@components/error";
 import Loading from "@components/loading";
 import {useCustomers} from "@lib/hooks";
 import {alertsManager} from "@pages/_app";
-// import {useSession} from "../../context/session";
 
 
 const CustomerInfo = () => {
@@ -15,7 +14,6 @@ const CustomerInfo = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
-    // const [status, setStatus] = useState('');
     
     const router = useRouter();
     const pid = Number(router.query?.pid);
