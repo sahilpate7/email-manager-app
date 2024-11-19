@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/default
-import transporter from "../../../utils/nodeMailer";
+import emailSender from "../../../utils/emailSender";
 
 export default async function handler(req:any, res:any) {
     if (req.method === 'POST') {
@@ -8,12 +8,7 @@ export default async function handler(req:any, res:any) {
         // Nodemailer function.
 
         try {
-            await transporter.sendMail({
-              from: process.env.MAIL_FROM,
-              to: email,
-              subject: subject,
-              text: message,
-            });
+            await emailSender({email, subject, message});
 
             res.status(200).json({ message: 'Email sent successfully!' });
         } catch (error) {

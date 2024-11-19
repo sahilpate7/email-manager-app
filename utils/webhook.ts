@@ -2,7 +2,7 @@ import {URLSearchParams} from "url";
 import {bigcommerceClient} from "@lib/auth";
 import db from "@lib/db";
 import {Customer} from "../types/bigcommerce";
-
+import sendCustomEmail from "./emailSender";
 
 const sendEmail = async (id:string,storeHash:string)=>{
     
@@ -23,27 +23,11 @@ const sendEmail = async (id:string,storeHash:string)=>{
     if (!customer){
         return false;
     }
-    
     try {
-        const response = await fetch('https://worthy-endless-colt.ngrok-free.app/api/email',{
-            method: 'POST',
-            headers:{
-                'Content-Type' : 'application/json',
-            },
-            body: JSON.stringify({email,subject,message})
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log('email sent');
-        } else {
-            // setStatus(`Failed to send message: ${data.error}`);
-            console.log(`${data.error}`);
-
-        }
-    } catch (error){
-        console.log(error);
+        await sendCustomEmail({email, subject, message})
+        console.log('Email sent successfully!');
+    } catch (error) {
+        console.log('Error ' + error);
     }
 }
 export default sendEmail;
