@@ -18,7 +18,7 @@ const sendEmail = async (id:string,storeHash:string)=>{
     const customer:Customer = response?.data[0];
     const {email, first_name, last_name} = customer;
     const subject = "Account Created Successfully";
-    const message = "Welcome to the store! we have exciting offers for you."
+    const message = `Welcome to the store ${first_name + ' ' + last_name}! we have exciting offers for you.`
     
     if (!customer){
         return false;
