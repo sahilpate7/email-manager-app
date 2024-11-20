@@ -112,3 +112,14 @@ export async function deleteStore({ store_hash: storeHash }: SessionProps) {
 
     await deleteDoc(ref);
 }
+
+export async function setTemplate(storeHash:string,template:string,html:string) {
+    
+    if (!html || !template) return false;
+
+    const ref = doc(db, 'store', storeHash,'emailTemplate',template);
+    const data = { html };
+    await setDoc(ref, data);
+    
+    return true;
+}
