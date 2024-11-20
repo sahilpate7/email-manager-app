@@ -123,3 +123,10 @@ export async function setTemplate(storeHash:string,template:string,html:string) 
     
     return true;
 }
+
+export async function getTemplate(storeHash: string,template:string) {
+    if (!storeHash || !template) return false;
+    const storeDoc = await getDoc(doc(db, 'store', storeHash, 'emailTemplate',template));
+
+    return storeDoc.data()?.html ?? false;
+}

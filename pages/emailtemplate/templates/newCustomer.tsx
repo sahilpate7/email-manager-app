@@ -1,16 +1,40 @@
 
-import {Box, Button, Flex, Form, FormGroup, Textarea} from "@bigcommerce/big-design";
-import { useState} from "react";
+import {Box, Button, Flex, FlexItem, Modal} from "@bigcommerce/big-design";
+import Editor from "@monaco-editor/react";
+import {useEffect, useRef, useState} from "react";
 import {alertsManager} from "@pages/_app";
 import {useSession} from "../../../context/session";
+
 
 const NewCustomer = () => {
     const [code, setCode] = useState('');
     const template= "newCustomer";
     const [loading, setLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const iframeRef = useRef(null);
+
     const { context } = useSession();
 
-    const onSubmit = async (e:any)=>{
+    const getTemplateHtml = async ()=>{
+        const response = await fetch(`/api/getTemplate?context=${context}`,{
+            method: 'POST',
+            headers:{
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({template})
+        });
+        if (response.ok) {
+            const data = await response.json();
+            if (!data) return false;
+            setCode(data.data)
+        }
+    }
+
+    useEffect(() => {
+        getTemplateHtml()
+    }, []);
+    
+    const onSave = async (e:any)=>{
         e.preventDefault();
         try {
             setLoading(true);
@@ -21,15 +45,11 @@ const NewCustomer = () => {
                 },
                 body: JSON.stringify({template,html: code})
             });
-
-            // const data = await response.json();
-
+            
             if (response.ok) {
-                // setCode(''); // Clear the message
                 setLoading(false);
                 alertsManager.add({ messages: [{ text: 'Template saved' }],type: 'success' });
             } else {
-                // setStatus(`Failed to send message: ${data.error}`);
                 alertsManager.add({ messages: [{ text: 'Failed to save template' }],type: 'error' });
                 setLoading(false);
             }
@@ -39,26 +59,73 @@ const NewCustomer = () => {
         }
     };
     
+    const showPreview = ()=>{
+        setIsOpen(true);
+        // if (iframeRef.current && code) {
+        // }
+        setInterval(()=>{
+            const iframeDoc = iframeRef.current.contentWindow.document;
+
+            // Dynamically write the fetched content into the iframe
+            iframeDoc.open();
+            iframeDoc.write(code); // Assuming `code` contains valid HTML content
+            iframeDoc.close();
+        },1000)
+       
+    }
+    
     return (
-        <Form onSubmit={onSubmit} >
-            <Box>
-                <FormGroup>
-                    <Textarea
-                        readOnly={loading}
-                        label=""
-                        name="message"
-                        placeholder="HTML code goes here"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        required
-                        rows={7}
+        <Flex
+            alignContent="stretch"
+            alignItems="stretch"
+            flexDirection="row"
+            flexWrap="nowrap"
+            justifyContent="space-between"
+            flexGap={"20px"}
+        >
+            <FlexItem style={{width:"100%"}}>
+                <Box style={{border:"1px solid #ccc"}}>
+                    <Editor
+                        height="50vh" // Set the editor's height
+                        defaultLanguage="html" // Specify the language
+                        defaultValue={code} // Initial value
+                        value={code} // Bind editor value to state
+                        onChange={(value) => setCode(value)} // Handle content changes
+                        theme="light" // Editor theme ('vs-dark', 'light', etc.)
+                        options={{
+                            "wordWrap": "on",
+                        }}
                     />
-                </FormGroup>
-            </Box>
-            <Flex justifyContent="flex-start" marginTop={'medium'}>
-                <Button type="submit" isLoading={loading}>Save</Button>
-            </Flex>
-        </Form>
+                </Box>
+                <Flex justifyContent="flex-end" marginTop={'medium'}>
+                    <Button type="button" onClick={onSave} isLoading={loading}>Save</Button>
+                    <Button type="button" onClick={showPreview} variant={'secondary'}>Preview</Button>
+                </Flex>
+            </FlexItem>
+           
+            <Modal
+                actions={[
+                    {
+                        text: 'Cancel',
+                       
+                        onClick: () => setIsOpen(false),
+                    }
+                ]}
+                closeOnClickOutside={false}
+                closeOnEscKey={true}
+                header="Preview"
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            >
+                <Box style={{
+                    border: "1px solid #ccc",
+                }}>
+                    <iframe ref={iframeRef} width="100%" height="auto" style={{
+                        border: "none",
+                    }} ></iframe>
+                </Box>
+            </Modal>
+        </Flex>
     );
 }
 
