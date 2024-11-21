@@ -16,10 +16,12 @@ export default async function handler(req, res) {
         const storeHash = payload.producer.split('/')[1];
         // console.log(storehash + " " + customerID);
         switch (payload.scope){
-            case "store/customer/created":
+            case "store/customer/created":{
                 // code goes here
-                sendEmail(customerID,storeHash)
+                const template = "newCustomer";
+                await sendEmail(customerID,storeHash,template);
                 break;
+            }
         }
         
         // Process the payload here

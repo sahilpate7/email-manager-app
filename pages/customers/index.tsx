@@ -1,6 +1,10 @@
-import {Button, Dropdown, Panel, Link as StyledLink, Table, TableSortDirection,} from "@bigcommerce/big-design";
-import {MoreHorizIcon} from "@bigcommerce/big-design-icons";
-import Link from "next/link";
+import {
+    Button,
+    Panel,
+    Table,
+    TableSortDirection,
+    Text,
+} from "@bigcommerce/big-design";
 import {useRouter} from "next/router";
 import {ReactElement, useState} from "react";
 import {useCustomers} from '@lib/hooks';
@@ -40,21 +44,14 @@ const Customers = () => {
     };
 
     const renderName = (id: number, first_name:string,last_name): ReactElement => (
-        <Link href={`/customers/${id}`}>
-            <StyledLink>{first_name + " " + last_name}</StyledLink>
-        </Link>
+        <Text>{first_name + " " + last_name}</Text>
     );
     const renderEmail = (email: string): ReactElement => (
-        <Link href={`mailto:${email}`}>
-            <StyledLink>{email}</StyledLink>
-        </Link>
+        <Text>{email}</Text>
     );
 
     const renderAction = (id: number): ReactElement => (
-        <Dropdown
-            items={[ { content: 'Edit customer', onItemClick: () => router.push(`/products/${id}`), hash: 'edit' } ]}
-            toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
-        />
+        <Button variant="secondary" onClick={()=> router.push(`/customers/${id}`)}>Send email</Button>
     );
 
     if (isLoading) return <Loading />;
@@ -66,7 +63,7 @@ const Customers = () => {
                 columns={[
                     { header: 'Customer name', hash: 'name', render: ({ id, first_name,last_name }) => renderName(id, first_name,last_name), isSortable: false },
                     { header: 'Email', hash: 'email', render: ({ email }) => renderEmail(email) },
-                    { header: 'Action', hideHeader: true, hash: 'id', render: ({ id }) => renderAction(id) },
+                    { header: 'Action', hash: 'id', render: ({ id }) => renderAction(id) },
                 ]}
                 items={tableItems}
                 itemName="Customers"
@@ -84,6 +81,7 @@ const Customers = () => {
                     onSort,
                 }}
                 stickyHeader
+                
             />
         </Panel>
     );

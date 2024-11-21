@@ -1,5 +1,5 @@
 
-import {Box, Button, Flex, FlexItem, Modal} from "@bigcommerce/big-design";
+import {Box, Button, Flex, Modal} from "@bigcommerce/big-design";
 import Editor from "@monaco-editor/react";
 import {useEffect, useRef, useState} from "react";
 import {alertsManager} from "@pages/_app";
@@ -59,55 +59,43 @@ const NewCustomer = () => {
         }
     };
     
-    const showPreview = ()=>{
+    const showPreview = (e:any)=>{
+        e.preventDefault();
         setIsOpen(true);
-        // if (iframeRef.current && code) {
-        // }
-        setInterval(()=>{
+        setTimeout(()=>{
             const iframeDoc = iframeRef.current.contentWindow.document;
 
             // Dynamically write the fetched content into the iframe
             iframeDoc.open();
             iframeDoc.write(code); // Assuming `code` contains valid HTML content
             iframeDoc.close();
-        },1000)
+        },2000)
        
     }
     
     return (
-        <Flex
-            alignContent="stretch"
-            alignItems="stretch"
-            flexDirection="row"
-            flexWrap="nowrap"
-            justifyContent="space-between"
-            flexGap={"20px"}
-        >
-            <FlexItem style={{width:"100%"}}>
-                <Box style={{border:"1px solid #ccc"}}>
-                    <Editor
-                        height="50vh" // Set the editor's height
-                        defaultLanguage="html" // Specify the language
-                        defaultValue={code} // Initial value
-                        value={code} // Bind editor value to state
-                        onChange={(value) => setCode(value)} // Handle content changes
-                        theme="light" // Editor theme ('vs-dark', 'light', etc.)
-                        options={{
-                            "wordWrap": "on",
-                        }}
-                    />
-                </Box>
-                <Flex justifyContent="flex-end" marginTop={'medium'}>
-                    <Button type="button" onClick={onSave} isLoading={loading}>Save</Button>
-                    <Button type="button" onClick={showPreview} variant={'secondary'}>Preview</Button>
-                </Flex>
-            </FlexItem>
-           
+        <Box>
+            <Box style={{border:"1px solid #ccc"}}>
+                <Editor
+                    height="50vh" // Set the editor's height
+                    defaultLanguage="html" // Specify the language
+                    defaultValue={code} // Initial value
+                    value={code} // Bind editor value to state
+                    onChange={(value) => setCode(value)} // Handle content changes
+                    theme="light" // Editor theme ('vs-dark', 'light', etc.)
+                    options={{
+                        "wordWrap": "on",
+                    }}
+                />
+            </Box>
+            <Flex justifyContent="flex-end" marginTop={'medium'}>
+                <Button type="button" onClick={onSave} isLoading={loading}>Save</Button>
+                <Button type="button" onClick={showPreview} variant={'secondary'}>Preview</Button>
+            </Flex>
             <Modal
                 actions={[
                     {
                         text: 'Cancel',
-                       
                         onClick: () => setIsOpen(false),
                     }
                 ]}
@@ -125,7 +113,7 @@ const NewCustomer = () => {
                     }} ></iframe>
                 </Box>
             </Modal>
-        </Flex>
+        </Box>
     );
 }
 
