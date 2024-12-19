@@ -21,7 +21,7 @@ const sendEmail = async (id:string,storeHash:string,template:string)=>{
     // console.log(storeData);
     const customer:Customer = response?.data[0];
     const {email, first_name, last_name} = customer;
-    const {name, phone, address} = storeData;
+    const {name, phone, address,logo} = storeData;
     const subject = `Account Created Successfully ${first_name}`;
     const message = `Welcome to the store ${first_name + ' ' + last_name}! we have exciting offers for you.`
     const result = await getTemplate(storeHash,template);
@@ -33,6 +33,7 @@ const sendEmail = async (id:string,storeHash:string,template:string)=>{
         .replace(/{{store_address}}/g,address)
         .replace(/{{store_phone}}/g,phone)
         .replace(/{{store_name}}/g,name)
+        .replace(/{{store_logo}}/g,logo?.url)
     // console.log(result);
     if (!customer && !result){
         return false;

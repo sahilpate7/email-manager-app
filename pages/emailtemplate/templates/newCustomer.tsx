@@ -84,9 +84,10 @@ const NewCustomer = () => {
                         options={[
                             { value: 'fn', content: 'First name: {{first_name}}' },
                             { value: 'ln', content: 'Last name: {{last_name}}' },
-                            { value: 'ln', content: 'Last name: {{store_address}}' },
-                            { value: 'ln', content: 'Last name: {{store_phone}}' },
-                            { value: 'ln', content: 'Last name: {{store_name}}' },
+                            { value: 'sa', content: 'Store Address: {{store_address}}' },
+                            { value: 'sp', content: 'Store Phone: {{store_phone}}' },
+                            { value: 'sn', content: 'Store Name: {{store_name}}' },
+                            { value: 'sl', content: 'Store Logo: {{store_logo}}' },
                         ]}
                         placeholder="Check variables"
                         placement="bottom-start"
