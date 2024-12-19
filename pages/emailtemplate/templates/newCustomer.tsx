@@ -1,5 +1,5 @@
 
-import {Box, Button, Flex, Modal} from "@bigcommerce/big-design";
+import {Box, Button, Flex, Form, FormGroup,Modal, Select} from "@bigcommerce/big-design";
 import Editor from "@monaco-editor/react";
 import {useEffect, useRef, useState} from "react";
 import {alertsManager} from "@pages/_app";
@@ -75,6 +75,25 @@ const NewCustomer = () => {
     
     return (
         <Box>
+            <Form marginBottom={'medium'}>
+                <FormGroup>
+                    <Select
+                        onOptionChange={()=> {return null}}
+                        label="Available variables"
+                        maxHeight={300}
+                        options={[
+                            { value: 'fn', content: 'First name: {{first_name}}' },
+                            { value: 'ln', content: 'Last name: {{last_name}}' },
+                            { value: 'ln', content: 'Last name: {{store_address}}' },
+                            { value: 'ln', content: 'Last name: {{store_phone}}' },
+                            { value: 'ln', content: 'Last name: {{store_name}}' },
+                        ]}
+                        placeholder="Check variables"
+                        placement="bottom-start"
+                        required
+                    />
+                </FormGroup>
+            </Form>
             <Box style={{border:"1px solid #ccc"}}>
                 <Editor
                     height="50vh" // Set the editor's height
