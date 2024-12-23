@@ -1,6 +1,7 @@
 // pages/api/webhooks.js
 import * as process from "node:process";
-import sendEmail from "../../../utils/webhook";
+import newCustomerEmail from "../../../utils/newCustomerWebhook";
+import newOrderEmail from "../../../utils/newOrderWebhook";
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
@@ -12,14 +13,19 @@ export default async function handler(req, res) {
         if (securityHeader !== process.env.WEBHOOK_SECRET){
             res.status(401).send('Authentication Failed');
         }
-        const customerID = payload.data.id;
+        const id = payload.data.id;
         const storeHash = payload.producer.split('/')[1];
         // console.log(storehash + " " + customerID);
         switch (payload.scope){
             case "store/customer/created":{
                 // code goes here
                 const template = "newCustomer";
-                await sendEmail(customerID,storeHash,template);
+                await newCustomerEmail(id,storeHash,template);
+                break;
+            }
+            case "store/order/created":{
+                const template = "newOrder";
+                await newOrderEmail(id,storeHash,template);
                 break;
             }
         }

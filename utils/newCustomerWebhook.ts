@@ -5,7 +5,7 @@ import {getTemplate} from "@lib/dbs/firebase";
 import {Customer,Store} from "../types/bigcommerce";
 import sendCustomEmail from "./emailSender";
 
-const sendEmail = async (id:string,storeHash:string,template:string)=>{
+const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
     
     const accessToken = await db.getStoreToken(storeHash);
     const version = 'v2';
@@ -45,4 +45,4 @@ const sendEmail = async (id:string,storeHash:string,template:string)=>{
         console.log('Error ' + error);
     }
 }   
-export default sendEmail;
+export default newCustomerEmail;
