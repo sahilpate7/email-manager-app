@@ -1,22 +1,22 @@
 import {URLSearchParams} from "url";
 import {bigcommerceClient} from "@lib/auth";
 import db from "@lib/db";
-import {Customer} from "../types/bigcommerce";
-import sendCustomEmail from "./emailSender";
 import {getTemplate} from "@lib/dbs/firebase";
+import {Customer,Store} from "../types/bigcommerce";
+import sendCustomEmail from "./emailSender";
 
 const sendEmail = async (id:string,storeHash:string,template:string)=>{
     
     const accessToken = await db.getStoreToken(storeHash);
-    const version:string = 'v2';
+    const version = 'v2';
 
     const bigcommerce = bigcommerceClient(accessToken, storeHash);
-    const bigcommerceV2 = bigcommerceClient(accessToken,storeHash, version)
+    const bigcommerceV2 = bigcommerceClient(accessToken,storeHash, version);
 
     const params = new URLSearchParams({ 'id:in':id }).toString();
 
     const response = await bigcommerce.get(`/customers?${params}`);
-    const storeData = await bigcommerceV2.get(`/store`);
+    const storeData:Store = await bigcommerceV2.get(`/store`);
     // console.log(response.data[0]);
     // console.log(storeData);
     const customer:Customer = response?.data[0];
