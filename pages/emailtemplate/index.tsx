@@ -1,6 +1,7 @@
 import {Box, Panel, Tabs,Text} from "@bigcommerce/big-design";
 import {useState} from "react";
 import NewCustomer from "@pages/emailtemplate/templates/newCustomer";
+import NewOrder from "@pages/emailtemplate/templates/newOrder";
 
 const EmailTemplate = ()=>{
     const [activeTab, setActiveTab] = useState('tab1');
@@ -23,7 +24,7 @@ const EmailTemplate = ()=>{
             />
             <Box marginTop="large">
                 {activeTab === 'tab1' && <NewCustomer />}
-                {activeTab === 'tab2' && <Text id="content2">Content 2</Text>}
+                {activeTab === 'tab2' && <NewOrder />}
                 {activeTab === 'tab3' && <Text id="content3">Content 3</Text>}
                 {activeTab === 'tab4' && <Text id="content4">Content 4</Text>}
             </Box>
