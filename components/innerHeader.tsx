@@ -14,20 +14,19 @@ const InnerHeader = () => {
     const [title, setTitle] = useState("");
    
     const handleBackClick = () =>{ 
-        if (pathname.includes('/products/[pid]')){
-            router.push(TabRoutes[TabIds.PRODUCTS]);
-            
-        } else if (pathname.includes('/customers/[pid]')){
-            router.push(TabRoutes[TabIds.CUSTOMERS]);
+        if (pathname.includes('/customers/[pid]')){
+            router.push(TabRoutes[TabIds.HOME]);
+        } else if (pathname.includes('/settings')){
+            router.push(TabRoutes[TabIds.HOME]);
         }
     };
 
     useEffect(() => {
-        if (String(pathname) === '/products/[pid]'){
-            setTitle('Products');
-        } else if (String(pathname) === '/customers/[pid]'){
+       if (String(pathname) === '/customers/[pid]'){
             setTitle('Customers')
-        }
+       } else if (String(pathname) === '/settings'){
+           setTitle('Settings')
+       }
     }, [pathname]);
 
     return (

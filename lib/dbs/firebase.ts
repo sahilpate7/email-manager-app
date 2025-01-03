@@ -130,3 +130,21 @@ export async function getTemplate(storeHash: string,template:string) {
 
     return storeDoc.data()?.html ?? false;
 }
+
+export async function setAdminSettings(storeHash:string,fieldName:string,value:string) {
+
+    if (!value || !fieldName) return false;
+
+    const ref = doc(db, 'store', storeHash,'adminSettings',fieldName);
+    const data = { value };
+    await setDoc(ref, data);
+
+    return true;
+}
+
+export async function getAdminSettings(storeHash: string,fieldName:string) {
+    if (!storeHash || !fieldName) return false;
+    const storeDoc = await getDoc(doc(db, 'store', storeHash, 'adminSettings',fieldName));
+
+    return storeDoc.data()?.value ?? false;
+}

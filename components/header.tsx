@@ -1,19 +1,16 @@
-import { Box, Tabs } from '@bigcommerce/big-design';
+import {Box, Button, Flex, FlexItem, Tabs} from '@bigcommerce/big-design';
+import {SettingsIcon} from "@bigcommerce/big-design-icons";
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import InnerHeader from './innerHeader';
 
 export const TabIds = {
     HOME: 'home',
-    PRODUCTS: 'products',
-    CUSTOMERS: 'customers',
     EMAIL_TEMPLATE: 'emailTemplate',
 };
 
 export const TabRoutes = {
     [TabIds.HOME]: '/',
-    [TabIds.PRODUCTS]: '/products',
-    [TabIds.CUSTOMERS]: '/customers',
     [TabIds.EMAIL_TEMPLATE]: '/emailtemplate',
 };
 
@@ -27,6 +24,7 @@ const HeaderlessRoutes = [
 const InnerRoutes = [
     '/products/[pid]',
     '/customers/[pid]',
+    '/settings',
 ];
 
 const HeaderTypes = {
@@ -64,9 +62,7 @@ const Header = () => {
     });
 
     const items = [
-        { ariaControls: 'home', id: TabIds.HOME, title: 'Home' },
-        { ariaControls: 'products', id: TabIds.PRODUCTS, title: 'Products' },
-        { ariaControls: 'customers', id: TabIds.CUSTOMERS, title: 'Customers' },
+        { ariaControls: 'home', id: TabIds.HOME, title: 'Customers' },
         { ariaControls: 'emailTemplate', id: TabIds.EMAIL_TEMPLATE, title: 'Email Template' },
     ];
 
@@ -76,17 +72,31 @@ const Header = () => {
         return router.push(TabRoutes[tabId]);
     };
 
+    const handleSettingsClick = () => {
+        return router.push('/settings');
+    }
+
     if (headerType === HeaderTypes.HEADERLESS) return null;
     if (headerType === HeaderTypes.INNER) return <InnerHeader />;
 
     return (
-        <Box marginBottom="xxLarge">
-            <Tabs
-                activeTab={activeTab}
-                items={items}
-                onTabClick={handleTabClick}
-            />
-        </Box>
+        <>
+            <Flex justifyContent={'space-between'} alignItems={'center'}>
+                <FlexItem>
+                    <h2 className={'appName'}>Custom email manager</h2>
+                </FlexItem>
+                <FlexItem>
+                    <Button iconLeft={<SettingsIcon color="secondary50" />} variant={'subtle'} onClick={handleSettingsClick} ></Button>
+                </FlexItem>
+            </Flex>
+            <Box marginBottom="xxLarge">
+                <Tabs
+                    activeTab={activeTab}
+                    items={items}
+                    onTabClick={handleTabClick}
+                />
+            </Box>
+        </>
     );
 };
 
