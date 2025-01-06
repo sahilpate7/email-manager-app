@@ -4,19 +4,15 @@ import {getAdminSettings} from "@lib/dbs/firebase";
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     if (req.method === 'POST') {
-        const {fieldName} = req.body;
         const {storeHash} = await getSession(req);
 
         try {
-            const result = await getAdminSettings(storeHash,fieldName);
-
+            const result = await getAdminSettings(storeHash);
             if (result){
                 res.status(200).json({ message: 'Data received',data:result });
-
             } else {
                 res.status(500).json({error: 'Failed to get data'});
             }
-
         } catch (error) {
             res.status(500).json({ error: error });
         }

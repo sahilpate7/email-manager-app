@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { deleteDoc, doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import {deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc} from 'firebase/firestore';
 import { SessionProps, UserData } from '@types';
 
 // Firebase config and initialization
@@ -131,20 +131,21 @@ export async function getTemplate(storeHash: string,template:string) {
     return storeDoc.data()?.html ?? false;
 }
 
-export async function setAdminSettings(storeHash:string,fieldName:string,value:string) {
+export async function setAdminSettings(storeHash:string,settings:object) {
 
-    if (!value || !fieldName) return false;
+    if (!settings) return false;
 
-    const ref = doc(db, 'store', storeHash,'adminSettings',fieldName);
-    const data = { value };
+    const ref = doc(db, 'store', storeHash,'settings','adminSettings');
+    const data = settings;
     await setDoc(ref, data);
 
     return true;
 }
 
-export async function getAdminSettings(storeHash: string,fieldName:string) {
-    if (!storeHash || !fieldName) return false;
-    const storeDoc = await getDoc(doc(db, 'store', storeHash, 'adminSettings',fieldName));
+export async function getAdminSettings(storeHash: string) {
+    if (!storeHash) return false;
+    const storeDoc = await getDoc(doc(db, 'store', storeHash, 'settings','adminSettings'));
 
-    return storeDoc.data()?.value ?? false;
+    return storeDoc.data() ?? false;
 }
+

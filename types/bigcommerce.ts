@@ -11,6 +11,14 @@ export type Store = {
     logo: { url:string },
 }
 
+export type AdminSettings = {
+    adminEmail:string,
+    mailHost:string,
+    mailPort:string,
+    mailPass:string,
+    mailUser:string,
+}
+
 export type Order = {
     "id": number,
     "customer_id": string,

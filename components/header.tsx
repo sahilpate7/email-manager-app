@@ -7,11 +7,13 @@ import InnerHeader from './innerHeader';
 export const TabIds = {
     HOME: 'home',
     EMAIL_TEMPLATE: 'emailTemplate',
+    SETTINGS: 'settings',
 };
 
 export const TabRoutes = {
     [TabIds.HOME]: '/',
     [TabIds.EMAIL_TEMPLATE]: '/emailtemplate',
+    [TabIds.SETTINGS]: '/settings',
 };
 
 const HeaderlessRoutes = [
@@ -24,7 +26,6 @@ const HeaderlessRoutes = [
 const InnerRoutes = [
     '/products/[pid]',
     '/customers/[pid]',
-    '/settings',
 ];
 
 const HeaderTypes = {
@@ -64,6 +65,7 @@ const Header = () => {
     const items = [
         { ariaControls: 'home', id: TabIds.HOME, title: 'Customers' },
         { ariaControls: 'emailTemplate', id: TabIds.EMAIL_TEMPLATE, title: 'Email Template' },
+        { ariaControls: 'settings', id: TabIds.SETTINGS, title: 'Settings' },
     ];
 
     const handleTabClick = (tabId: string) => {
