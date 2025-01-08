@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import {deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc} from 'firebase/firestore';
+import {deleteDoc, doc, getDoc, getFirestore, setDoc, updateDoc} from 'firebase/firestore';
 import { SessionProps, UserData } from '@types';
 
 // Firebase config and initialization

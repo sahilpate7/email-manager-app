@@ -99,6 +99,7 @@ const SettingsForm = () => {
                         value={adminEmail}
                         onChange={(e)=> setAdminEmail(e.target.value)}
                         placeholder={'johndoe@gmail.com'}
+                        type={'email'}
                     />
                 </FormGroup>
                 <FormGroup>
@@ -121,6 +122,7 @@ const SettingsForm = () => {
                         value={mailUser}
                         onChange={(e)=> setMailUser(e.target.value)}
                         placeholder={'johndoe@gmail.com'}
+                        type={'email'}
                     />
                 </FormGroup>
                 <FormGroup>
@@ -132,6 +134,7 @@ const SettingsForm = () => {
                         value={mailPass}
                         onChange={(e)=> setMailPass(e.target.value)}
                         placeholder={'password'}
+                        type={'password'}
                     />
                 </FormGroup>
                 <FormGroup>
