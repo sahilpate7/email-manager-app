@@ -1,4 +1,3 @@
-
 import { Button, Flex, FormGroup, Input, Panel, Form as StyledForm, Text, Textarea} from "@bigcommerce/big-design";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
@@ -6,6 +5,7 @@ import ErrorMessage from "@components/error";
 import Loading from "@components/loading";
 import {useCustomers} from "@lib/hooks";
 import {alertsManager} from "@pages/_app";
+import {useSession} from "../../context/session";
 
 
 const CustomerInfo = () => {
@@ -14,16 +14,15 @@ const CustomerInfo = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
-    
     const router = useRouter();
     const pid = Number(router.query?.pid);
     const { error, isLoading, list = []} = useCustomers({
         page: String(1),
         limit: String(50),
     });
-   
     const currentCustomer = list.find((user) => user.id === pid);
-    
+    const { context } = useSession();
+
     useEffect(()=>{
         setEmail(currentCustomer?.email);
         setName(currentCustomer?.first_name + ' ' + currentCustomer?.last_name);
@@ -37,7 +36,7 @@ const CustomerInfo = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await fetch('/api/email',{
+            const response = await fetch(`/api/email?context=${context}`,{
                 method: 'POST',
                 headers:{
                     'Content-Type' : 'application/json',

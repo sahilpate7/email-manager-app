@@ -1,9 +1,9 @@
 import {URLSearchParams} from "url";
 import {bigcommerceClient} from "@lib/auth";
 import db from "@lib/db";
-import {getTemplate} from "@lib/dbs/firebase";
+import {getAdminSettings, getTemplate} from "@lib/dbs/firebase";
 import {Customer, Order, Store} from "../types/bigcommerce";
-import sendCustomEmail from "./emailSender";
+import emailSender, {EmailSender} from "./emailSender";
 
 const newOrderEmail = async (id:string,storeHash:string,template:string)=>{
 
@@ -33,6 +33,7 @@ const newOrderEmail = async (id:string,storeHash:string,template:string)=>{
     const subject = `Thank you for your order ${customerFirstName}`;
     const message = `Your order number is  ${orderId}!`
     let orderTemplate = await getTemplate(storeHash, template);
+    const emailConfig = await getAdminSettings(storeHash);
 
     orderTemplate = orderTemplate
         .replace(/{{first_name}}/g, customerFirstName)
@@ -46,8 +47,7 @@ const newOrderEmail = async (id:string,storeHash:string,template:string)=>{
     //     return false;
     // }
     try {
-        await sendCustomEmail({email:customerEmail, subject, message,html:orderTemplate})
-        // console.log('Email sent successfully!');
+        await emailSender(<EmailSender>{email:customerEmail, subject, message,html:orderTemplate, settings:emailConfig});
     } catch (error) {
         console.log('Error ' + error);
     }

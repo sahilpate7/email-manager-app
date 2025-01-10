@@ -1,9 +1,9 @@
 import {URLSearchParams} from "url";
 import {bigcommerceClient} from "@lib/auth";
 import db from "@lib/db";
-import {getTemplate} from "@lib/dbs/firebase";
+import {getAdminSettings, getTemplate} from "@lib/dbs/firebase";
 import {Customer,Store} from "../types/bigcommerce";
-import sendCustomEmail from "./emailSender";
+import emailSender, {EmailSender} from "./emailSender";
 
 const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
     
@@ -25,6 +25,7 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
     const subject = `Account Created Successfully ${first_name}`;
     const message = `Welcome to the store ${first_name + ' ' + last_name}! we have exciting offers for you.`
     const result = await getTemplate(storeHash,template);
+    const emailConfig = await getAdminSettings(storeHash);
     let newTemplate = result;
     
     newTemplate = newTemplate
@@ -39,7 +40,7 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
         return false;
     }
     try {
-        await sendCustomEmail({email, subject, message,html:newTemplate})
+        await emailSender(<EmailSender>{email, subject, message, html: newTemplate, settings: emailConfig});
         console.log('Email sent successfully!');
     } catch (error) {
         console.log('Error ' + error);
