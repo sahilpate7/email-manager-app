@@ -46,6 +46,21 @@ export function useCustomers(query?: QueryParams) {
         mutateList,
     };
 }
+export function useCustomerInfo(pid: number ) {
+    const { context } = useSession();
+    const params = new URLSearchParams({ context }).toString();
+
+    // Use an array to send multiple arguments to fetcher
+    const { data, error, mutate: mutateList } = useSWR(context ? [`/api/customers/${pid}`, params] : null, fetcher);
+
+    return {
+        customer: data?.data[0],
+        meta: data?.meta,
+        isLoading: !data && !error,
+        error,
+        mutateList,
+    };
+}
 
 export function useProductList(query?: QueryParams) {
     const { context } = useSession();

@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import ErrorMessage from "@components/error";
 import Loading from "@components/loading";
-import {useCustomers} from "@lib/hooks";
+import {useCustomerInfo} from "@lib/hooks";
 import {alertsManager} from "@pages/_app";
 import {useSession} from "../../context/session";
 
@@ -16,11 +16,8 @@ const CustomerInfo = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const pid = Number(router.query?.pid);
-    const { error, isLoading, list = []} = useCustomers({
-        page: String(1),
-        limit: String(50),
-    });
-    const currentCustomer = list.find((user) => user.id === pid);
+    const { error, isLoading,customer} = useCustomerInfo(pid);
+    const currentCustomer = customer;
     const { context } = useSession();
 
     useEffect(()=>{
