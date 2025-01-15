@@ -27,6 +27,7 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
     const result = await getTemplate(storeHash,template);
     const emailConfig = await getAdminSettings(storeHash);
     let newTemplate = result;
+    const sendToOwner = true;
     
     newTemplate = newTemplate
         .replace(/{{first_name}}/g, first_name)
@@ -40,7 +41,7 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
         return false;
     }
     try {
-        await emailSender(<EmailSender>{email, subject, message, html: newTemplate, settings: emailConfig});
+        await emailSender(<EmailSender>{email, subject, message, html: newTemplate, settings: emailConfig,sendToOwner});
         console.log('Email sent successfully!');
     } catch (error) {
         console.log('Error ' + error);

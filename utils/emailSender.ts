@@ -12,10 +12,12 @@ export type EmailSender = {
         mailUser: string,
         mailPass: string
     }
+    sendToOwner: boolean
 }
 
 
-export default async function emailSender({email, subject, message,html, settings}:EmailSender) {
+export default async function emailSender({email, subject, message,html, settings, sendToOwner}:EmailSender) {
+    const receiverEmail= sendToOwner? settings.adminEmail : email;
     const transporter = nodemailer.createTransport({
         host: settings.mailHost,
         port: Number(settings.mailPort),
@@ -28,7 +30,7 @@ export default async function emailSender({email, subject, message,html, setting
 
     await transporter.sendMail({
         from: settings.adminEmail,
-        to: email,
+        to: receiverEmail,
         subject: subject,
         text: message,
         html: html

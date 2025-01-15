@@ -33,12 +33,13 @@ const CustomerInfo = () => {
         e.preventDefault();
         try {
             setLoading(true);
+            const sendToOwner = false;
             const response = await fetch(`/api/email?context=${context}`,{
                 method: 'POST',
                 headers:{
                     'Content-Type' : 'application/json',
                 },
-                body: JSON.stringify({email,subject,message})
+                body: JSON.stringify({email,subject,message,sendToOwner})
             });
 
             // const data = await response.json();
