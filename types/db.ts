@@ -19,4 +19,6 @@ export interface Db {
     getStoreToken(storeId: string): Promise<string> | null;
     deleteStore(session: SessionProps): Promise<void>;
     deleteUser(session: SessionProps): Promise<void>;
+    setInitialAdminSettingsFields(session: SessionProps): Promise<void>;
+    setInitialTemplateFields(session: SessionProps): Promise<void>;
 }

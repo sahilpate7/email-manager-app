@@ -55,6 +55,8 @@ export function setSession(session: SessionProps) {
     db.setUser(session);
     db.setStore(session);
     db.setStoreUser(session);
+    db.setInitialAdminSettingsFields(session);
+    db.setInitialTemplateFields(session);
 }
 
 export async function getSession({ query: { context = '' } }: NextApiRequest) {

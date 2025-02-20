@@ -47,6 +47,69 @@ export async function setStore(session: SessionProps) {
     await setDoc(ref, data);
 }
 
+export async function setInitialAdminSettingsFields(session: SessionProps) {
+    const { context, access_token: accessToken, scope } = session;
+
+    // Only set on app install or update
+    if (!accessToken || !scope) return null;
+
+    const storeHash = context?.split('/')[1] || '';
+
+    const docSnap = await getDoc(doc(db, 'store', storeHash, 'settings','adminSettings'));
+    if (docSnap.exists()) {
+        // console.log("Admin settings already exist. Skipping initialization.");
+        return;
+    }
+
+    const ref = doc(db, 'store', storeHash,'settings','adminSettings');
+    const data = {
+        adminEmail: "",
+        mailHost: "",
+        mailUser: "",
+        mailPass: "",
+        mailPort: "",
+    };
+
+    await setDoc(ref, data);
+}
+
+export async function setInitialTemplateFields(session: SessionProps) {
+    const { context, access_token: accessToken, scope } = session;
+
+    // Only set on app install or update
+    if (!accessToken || !scope) return null;
+
+    const storeHash = context?.split('/')[1] || '';
+    const html = "<!DOCTYPE html>\n" +
+        "<html lang=\"en\">\n" +
+        "  <head>\n" +
+        "    <meta charset=\"UTF-8\">\n" +
+        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+        "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+        "    <title>HTML 5 Boilerplate</title>\n" +
+        "    <link rel=\"stylesheet\" href=\"style.css\">\n" +
+        "  </head>\n" +
+        "  <body>\n" +
+        "    <script src=\"index.js\"></script>\n" +
+        "  </body>\n" +
+        "</html>"
+
+    const templates = ["newCustomer","newOrder"];
+    for (const template of templates) {
+        const ref = doc(db, 'store', storeHash, 'emailTemplate', template);
+
+        const docSnap = await getDoc(ref);
+        if (docSnap.exists()) {
+            // console.log(`Template ${template} already exists. Skipping initialization.`);
+            continue;
+        }
+
+        const data = { html }; // Ensure `html` is defined somewhere
+        await setDoc(ref, data);
+        // console.log(`Template ${template} initialized.`);
+    }
+}
+
 // User management for multi-user apps
 // Use setStoreUser for storing store specific variables
 export async function setStoreUser(session: SessionProps) {
