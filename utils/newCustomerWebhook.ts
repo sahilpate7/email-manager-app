@@ -26,7 +26,8 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
     const message = `Welcome to the store ${first_name + ' ' + last_name}! we have exciting offers for you.`
     const result = await getTemplate(storeHash,template);
     const emailConfig = await getAdminSettings(storeHash);
-    let newTemplate = result;
+    let newTemplate = result.html;
+    const enableSendEmail = result.toggle;
     const sendToOwner = true;
     
     newTemplate = newTemplate
@@ -37,7 +38,7 @@ const newCustomerEmail = async (id:string,storeHash:string,template:string)=>{
         .replace(/{{store_name}}/g,name)
         .replace(/{{store_logo}}/g,logo?.url)
     // console.log(result);
-    if (!customer && !result){
+    if (!customer && !result && !enableSendEmail) {
         return false;
     }
     try {

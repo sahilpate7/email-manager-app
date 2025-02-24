@@ -1,17 +1,22 @@
-
-import {Box, Button, Flex, Form, FormGroup,Modal, Select} from "@bigcommerce/big-design";
+import {Box, Button, Flex, FlexItem, Form, FormGroup, Modal, Select, Switch} from "@bigcommerce/big-design";
 import Editor from "@monaco-editor/react";
 import {useEffect, useRef, useState} from "react";
+import Loading from "@components/loading";
 import {alertsManager} from "@pages/_app";
 import {useSession} from "../../../context/session";
 
 
 const NewOrder = () => {
     const [code, setCode] = useState('');
+    const [toggle,setToggle] = useState(false);
     const template= "newOrder";
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const iframeRef = useRef(null);
+
+    const handleToggle = () => {
+        setToggle(!toggle);
+    }
 
     const { context } = useSession();
 
@@ -26,13 +31,20 @@ const NewOrder = () => {
         if (response.ok) {
             const data = await response.json();
             if (!data) return false;
-            setCode(data.data)
+            setCode(data.data.html);
+            setToggle(data.data.toggle);
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         getTemplateHtml()
     }, []);
+
+    const templateData = {
+        html: code,
+        toggle: toggle,
+    }
 
     const onSave = async (e:any)=>{
         e.preventDefault();
@@ -43,7 +55,7 @@ const NewOrder = () => {
                 headers:{
                     'Content-Type' : 'application/json',
                 },
-                body: JSON.stringify({template,html: code})
+                body: JSON.stringify({template,templateData})
             });
 
             if (response.ok) {
@@ -73,28 +85,37 @@ const NewOrder = () => {
 
     }
 
+    if (loading) return <Loading />;
+
     return (
         <Box>
-            <Form marginBottom={'medium'}>
-                <FormGroup>
-                    <Select
-                        onOptionChange={()=> {return null}}
-                        label="Available variables"
-                        maxHeight={300}
-                        options={[
-                            { value: 'fn', content: 'First name: {{first_name}}' },
-                            { value: 'ln', content: 'Last name: {{last_name}}' },
-                            { value: 'sa', content: 'Store Address: {{store_address}}' },
-                            { value: 'sp', content: 'Store Phone: {{store_phone}}' },
-                            { value: 'sn', content: 'Store Name: {{store_name}}' },
-                            { value: 'sl', content: 'Store Logo: {{store_logo}}' },
-                        ]}
-                        placeholder="Check variables"
-                        placement="bottom-start"
-                        required
-                    />
-                </FormGroup>
-            </Form>
+            <Flex justifyContent="space-between" alignItems="center">
+                <FlexItem>
+                    <Form marginBottom={'medium'}>
+                        <FormGroup>
+                            <Select
+                                onOptionChange={()=> {return null}}
+                                label="Available variables"
+                                maxHeight={300}
+                                options={[
+                                    { value: 'fn', content: 'First name: {{first_name}}' },
+                                    { value: 'ln', content: 'Last name: {{last_name}}' },
+                                    { value: 'sa', content: 'Store Address: {{store_address}}' },
+                                    { value: 'sp', content: 'Store Phone: {{store_phone}}' },
+                                    { value: 'sn', content: 'Store Name: {{store_name}}' },
+                                    { value: 'sl', content: 'Store Logo: {{store_logo}}' },
+                                ]}
+                                placeholder="Check variables"
+                                placement="bottom-start"
+                                required
+                            />
+                        </FormGroup>
+                    </Form>
+                </FlexItem>
+                <FlexItem>
+                    <Switch checked={toggle} onChange={handleToggle} />
+                </FlexItem>
+            </Flex>
             <Box style={{border:"1px solid #ccc"}}>
                 <Editor
                     height="50vh" // Set the editor's height

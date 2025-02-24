@@ -80,19 +80,22 @@ export async function setInitialTemplateFields(session: SessionProps) {
     if (!accessToken || !scope) return null;
 
     const storeHash = context?.split('/')[1] || '';
-    const html = "<!DOCTYPE html>\n" +
-        "<html lang=\"en\">\n" +
-        "  <head>\n" +
-        "    <meta charset=\"UTF-8\">\n" +
-        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-        "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
-        "    <title>HTML 5 Boilerplate</title>\n" +
-        "    <link rel=\"stylesheet\" href=\"style.css\">\n" +
-        "  </head>\n" +
-        "  <body>\n" +
-        "    <script src=\"index.js\"></script>\n" +
-        "  </body>\n" +
-        "</html>"
+    const templateData = {
+        html :"<!DOCTYPE html>\n" +
+            "<html lang=\"en\">\n" +
+            "  <head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+            "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+            "    <title>HTML 5 Boilerplate</title>\n" +
+            "    <link rel=\"stylesheet\" href=\"style.css\">\n" +
+            "  </head>\n" +
+            "  <body>\n" +
+            "    <script src=\"index.js\"></script>\n" +
+            "  </body>\n" +
+            "</html>",
+        toggle: false,
+    }
 
     const templates = ["newCustomer","newOrder"];
     for (const template of templates) {
@@ -104,7 +107,7 @@ export async function setInitialTemplateFields(session: SessionProps) {
             continue;
         }
 
-        const data = { html }; // Ensure `html` is defined somewhere
+        const data = { templateData };
         await setDoc(ref, data);
         // console.log(`Template ${template} initialized.`);
     }
@@ -176,12 +179,12 @@ export async function deleteStore({ store_hash: storeHash }: SessionProps) {
     await deleteDoc(ref);
 }
 
-export async function setTemplate(storeHash:string,template:string,html:string) {
+export async function setTemplate(storeHash:string,template:string,templateData:object) {
     
-    if (!html || !template) return false;
+    if (!templateData || !template) return false;
 
     const ref = doc(db, 'store', storeHash,'emailTemplate',template);
-    const data = { html };
+    const data = { templateData };
     await setDoc(ref, data);
     
     return true;
@@ -191,7 +194,7 @@ export async function getTemplate(storeHash: string,template:string) {
     if (!storeHash || !template) return false;
     const storeDoc = await getDoc(doc(db, 'store', storeHash, 'emailTemplate',template));
 
-    return storeDoc.data()?.html ?? false;
+    return storeDoc.data()?.templateData ?? false;
 }
 
 export async function setAdminSettings(storeHash:string,settings:object) {

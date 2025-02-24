@@ -4,11 +4,11 @@ import {setTemplate} from "@lib/dbs/firebase";
 
 export default async function handler(req: NextApiRequest, res:NextApiResponse) {
     if (req.method === 'POST') {
-        const {template,html } = req.body;
+        const {template, templateData } = req.body;
         const {storeHash} = await getSession(req);
 
         try {
-            const result = await setTemplate(storeHash, template, html);
+            const result = await setTemplate(storeHash, template, templateData);
             if (result){
                 res.status(200).json({ message: 'Template saved' });
             } else {

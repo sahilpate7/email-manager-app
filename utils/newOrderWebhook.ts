@@ -32,10 +32,11 @@ const newOrderEmail = async (id:string,storeHash:string,template:string)=>{
     const {name:storeName, phone:storePhone, address:storeAddress,logo:storeLogo} = storeData;
     const subject = `Thank you for your order ${customerFirstName}`;
     const message = `Your order number is  ${orderId}!`
-    let orderTemplate = await getTemplate(storeHash, template);
+    const {html, toggle} = await getTemplate(storeHash, template);
     const emailConfig = await getAdminSettings(storeHash);
     const sendToOwner = true;
-    orderTemplate = orderTemplate
+    const enableSendEmail = toggle;
+    const orderTemplate = html
         .replace(/{{first_name}}/g, customerFirstName)
         .replace(/{{last_name}}/g, customerLastName)
         .replace(/{{store_address}}/g, storeAddress)
@@ -46,6 +47,9 @@ const newOrderEmail = async (id:string,storeHash:string,template:string)=>{
     // if (!customer && !result){
     //     return false;
     // }
+    if (!enableSendEmail) {
+        return false;
+    }
     try {
         await emailSender(<EmailSender>{email:customerEmail, subject, message,html:orderTemplate, settings:emailConfig, sendToOwner});
     } catch (error) {
