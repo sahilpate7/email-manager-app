@@ -4,13 +4,35 @@ import * as BigCommerce from 'node-bigcommerce';
 import { ApiConfig, QueryParams, SessionContextProps, SessionProps } from '../types';
 import db from './db';
 
-const { API_URL, AUTH_CALLBACK, CLIENT_ID, CLIENT_SECRET, JWT_KEY, LOGIN_URL } = process.env;
+const {
+    API_URL,
+    AUTH_CALLBACK,
+    CLIENT_ID,
+    CLIENT_SECRET,
+    JWT_KEY,
+    LOGIN_URL,
+    ENVIRONMENT,
+} = process.env;
+
+const bcEnvironment = ENVIRONMENT || 'bigcommerce.com';
+function resolveHost(rawValue: string | undefined, hostPrefix: 'login' | 'api') {
+    const fallback = `${hostPrefix}.${bcEnvironment}`;
+    const resolved = (rawValue || fallback)
+        .replace(/\$\{ENVIRONMENT\}/g, bcEnvironment)
+        .replace(/\$ENVIRONMENT/g, bcEnvironment);
+
+    // Guard against unresolved template strings causing DNS failures.
+    return resolved.includes('$') ? fallback : resolved;
+}
+
+const resolvedLoginUrl = resolveHost(LOGIN_URL, 'login');
+const resolvedApiUrl = resolveHost(API_URL, 'api');
 
 // Used for internal configuration; 3rd party apps may remove
 const apiConfig: ApiConfig = {};
-if (API_URL && LOGIN_URL) {
-    apiConfig.apiUrl = API_URL;
-    apiConfig.loginUrl = LOGIN_URL;
+if (resolvedApiUrl && resolvedLoginUrl) {
+    apiConfig.apiUrl = resolvedApiUrl;
+    apiConfig.loginUrl = resolvedLoginUrl;
 }
 
 // Create BigCommerce instance
