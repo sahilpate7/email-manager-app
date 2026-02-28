@@ -21,6 +21,9 @@ const generateList = (): TableItem[] => (
         name: `Product ${index}`,
         price: (index + 1) * 10,
         stock: 7,
+        first_name: `First${index}`,
+        last_name: `Last${index}`,
+        email: `user${index}@example.com`,
     }))
 );
 

@@ -92,3 +92,17 @@ export async function getStoreToken(storeHash: string) {
 export async function deleteStore({ store_hash: storeHash }: SessionProps) {
     await query('DELETE FROM stores WHERE storeHash = ?', storeHash);
 }
+
+export async function setInitialAdminSettingsFields(session: SessionProps) {
+    const { access_token: accessToken, scope } = session;
+
+    // Only initialize on app install or update; MySQL backend currently has no settings table.
+    if (!accessToken || !scope) return;
+}
+
+export async function setInitialTemplateFields(session: SessionProps) {
+    const { access_token: accessToken, scope } = session;
+
+    // Only initialize on app install or update; MySQL backend currently has no template table.
+    if (!accessToken || !scope) return;
+}
