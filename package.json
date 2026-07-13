@@ -15,8 +15,8 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "24.x",
-    "npm": ">=8 <10"
+    "node": "22.x",
+    "npm": ">=10"
   },
   "dependencies": {
     "@bigcommerce/big-design": "^0.36.2",
